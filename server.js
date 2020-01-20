@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
-const signin = require('./controllers/signin');
-const register = require('./controllers/register');
+const handleSignIn = require('./controllers/signin');
+const handleRegister = require('./controllers/register');
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,9 +19,9 @@ const db = require('knex')({
 
 app.get('/', (req, res) => res.send('it is working'));
 
-app.post('/signin', (req, res) => { signin.handleSignIn (req, res, db, bcrypt)});
+app.post('/signin', (req, res) => { handleSignIn (req, res, db, bcrypt)});
 
-app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) });
+app.post('/register', (req, res) => { handleRegister(req, res, db, bcrypt) });
 
-// app.listen(3000);
+app.listen(3000);
 

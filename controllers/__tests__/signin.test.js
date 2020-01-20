@@ -1,4 +1,4 @@
-const {handleSignIn} = require('../signin');
+const handleSignIn = require('../signin');
 const bcrypt = require('bcrypt');
 const knex = require('knex');
 const db = knex({client: 'sqlite3', connection: ':memory:'});
