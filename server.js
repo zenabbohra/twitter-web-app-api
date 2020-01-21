@@ -7,13 +7,21 @@ const handleRegister = require('./controllers/register');
 const app = express();
 app.use(bodyParser.json());
 
+// const db = require('knex')({
+//   client: 'pg',
+//   connection: {
+//     host : '127.0.0.1',
+//     user : 'zenab',
+//     password : '',
+//     database : 'twitter-web-app-db'
+//   }
+// });
+
 const db = require('knex')({
   client: 'pg',
   connection: {
-    host : '127.0.0.1',
-    user : 'zenab',
-    password : '',
-    database : 'twitter-web-app-db'
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
   }
 });
 
@@ -23,5 +31,5 @@ app.post('/signin', (req, res) => { handleSignIn (req, res, db, bcrypt)});
 
 app.post('/register', (req, res) => { handleRegister(req, res, db, bcrypt) });
 
-app.listen(3000);
+app.listen(process.env.PORT, () => console.log(`app is listening on port ${process.env.PORT}`));
 
