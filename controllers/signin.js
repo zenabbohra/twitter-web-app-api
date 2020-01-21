@@ -12,6 +12,4 @@ const handleSignIn = (req, res, db, bcrypt) => {
     })
 };
 
-module.exports = {
-  handleSignIn: handleSignIn
-};
+module.exports = handleSignIn;
