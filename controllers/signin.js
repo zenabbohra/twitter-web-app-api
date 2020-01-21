@@ -5,11 +5,15 @@ const handleSignIn = (req, res, db, bcrypt) => {
   }).select('*')
     .then(data => {
       if (data.length > 0 && bcrypt.compareSync(password, data[0].hash)) {
-        res.status(200);
+        res.status(200).json({email, success: true});
       } else {
-        res.status(403);
+        res.status(403).json({success: false, err: 'invalid password'});
       }
     })
+    .catch(err => {
+      console.log('error while signing in the user', err);
+      return res.status(500).json({err: 'unable to sign in'});
+    });
 };
 
 module.exports = handleSignIn;
