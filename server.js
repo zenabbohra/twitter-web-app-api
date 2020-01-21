@@ -17,19 +17,25 @@ app.use(bodyParser.json());
 //   }
 // });
 
+console.log('NODE_ENV', process.env.NODE_ENV);
 const db = require('knex')({
   client: 'pg',
   connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
+    connectionString: process.env.DATABASE_URL || 'postgresql://zenab@127.0.0.1/twitter-web-app-db',
+    ssl: process.env.NODE_ENV === "production",
   }
 });
 
 app.get('/', (req, res) => res.send('it is working'));
 
-app.post('/signin', (req, res) => { handleSignIn (req, res, db, bcrypt)});
+app.post('/signin', (req, res) => {
+  handleSignIn(req, res, db, bcrypt)
+});
 
-app.post('/register', (req, res) => { handleRegister(req, res, db, bcrypt) });
+app.post('/register', (req, res) => {
+  handleRegister(req, res, db, bcrypt)
+});
 
-app.listen(process.env.PORT, () => console.log(`app is listening on port ${process.env.PORT}`));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`app is listening on port ${port}`));
 

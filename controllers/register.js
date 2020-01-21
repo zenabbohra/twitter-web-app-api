@@ -27,7 +27,10 @@ const handleRegister = (req, res, db, bcrypt) => {
       .then(trx.commit)
       .catch((err) => trx.rollback(err))
   }).then(() => res.json({name: name, email: email}))
-    .catch(err => res.status(500).json({err: 'unable to register'}));
+    .catch(err => {
+      console.log('error while registering the user', err);
+      return res.status(500).json({err: 'unable to register'});
+    });
 };
 
 

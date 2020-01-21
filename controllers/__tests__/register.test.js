@@ -16,7 +16,7 @@ describe('handleRegister()', () => {
     }).then(() =>
       db.schema.createTable('users', function (table) {
         table.increments();
-        table.string('user_name');
+        table.string('name');
         table.string('email');
         table.dateTime('joined_date');
         table.timestamps();
