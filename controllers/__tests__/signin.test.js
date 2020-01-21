@@ -2,6 +2,7 @@ const handleSignIn = require('../signin');
 const bcrypt = require('bcrypt');
 const knex = require('knex');
 const db = knex({client: 'sqlite3', connection: ':memory:'});
+const { mockResponse } = require('../../lib/testUtils');
 
 describe('handleSignIn()', () => {
 
@@ -16,51 +17,40 @@ describe('handleSignIn()', () => {
     });
   });
 
-  test("sign in fails when a user does not exist", (done) => {
+  test("sign in fails when a user does not exist", async () => {
     const req = {
       body: {
         email: 'incorrect-email@gmail.com',
         password: 'password',
       }
     };
-    const res = {
-      status: (statusCode) => {
-        expect(statusCode).toEqual(403);
-        done();
-      }
-    };
-    handleSignIn(req, res, db, bcrypt);
+
+    const res = mockResponse();
+    await handleSignIn(req, res, db, bcrypt);
+    expect(res.status).toHaveBeenCalledWith(403);
   });
 
-  test("sign in fails when the user exists but the password is incorrect", (done) => {
+  test("sign in fails when the user exists but the password is incorrect", async () => {
     const req = {
       body: {
         email: 'correct-email@gmail.com',
         password: 'incorrect-password',
       }
     };
-    const res = {
-      status: (statusCode) => {
-        expect(statusCode).toEqual(403);
-        done();
-      }
-    };
-    handleSignIn(req, res, db, bcrypt);
+    const res = mockResponse();
+    await handleSignIn(req, res, db, bcrypt);
+    expect(res.status).toHaveBeenCalledWith(403);
   });
 
-  test("sign in succeeds when the user exists and the password is correct", (done) => {
+  test("sign in succeeds when the user exists and the password is correct", async () => {
     const req = {
       body: {
         email: 'correct-email@gmail.com',
         password: 'correct-password',
       }
     };
-    const res = {
-      status: (statusCode) => {
-        expect(statusCode).toEqual(200);
-        done();
-      }
-    };
-    handleSignIn(req, res, db, bcrypt);
+    const res = mockResponse();
+    await handleSignIn(req, res, db, bcrypt);
+    expect(res.status).toHaveBeenCalledWith(200);
   });
 });

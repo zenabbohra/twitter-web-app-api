@@ -2,6 +2,7 @@ const handleRegister = require('../register');
 const bcrypt = require('bcrypt');
 const knex = require('knex');
 const db = knex({client: 'sqlite3', connection: ':memory:'});
+const { mockResponse } = require('../../lib/testUtils');
 
 describe('handleRegister()', () => {
 
@@ -30,21 +31,11 @@ describe('handleRegister()', () => {
         name: 123,
       }
     };
-
-    let statusCode;
-    let responseJson;
-    const res = {};
-    res.status = (code) => {
-      statusCode = code;
-      return res;
-    };
-    res.json = (json) => responseJson = json;
-
+    const res = mockResponse();
     await handleRegister(req, res, db, bcrypt);
-    expect(statusCode).toEqual(400);
-    expect(responseJson).toEqual({err: 'invalid name'});
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({err: 'invalid name'});
   });
-
 
   test('email is invalid', async () => {
     const req = {
@@ -53,19 +44,10 @@ describe('handleRegister()', () => {
         email: 123,
       }
     };
-
-    let statusCode;
-    let responseJson;
-    const res = {};
-    res.status = (code) => {
-      statusCode = code;
-      return res;
-    };
-    res.json = (json) => responseJson = json;
-
+    const res = mockResponse();
     await handleRegister(req, res, db, bcrypt);
-    expect(statusCode).toEqual(400);
-    expect(responseJson).toEqual({err: 'invalid email'});
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({err: 'invalid email'});
   });
 
   test('password is invalid', async () => {
@@ -77,22 +59,12 @@ describe('handleRegister()', () => {
       }
     };
 
-    let statusCode;
-    let responseJson;
-    const res = {};
-    res.status = (code) => {
-      statusCode = code;
-      return res;
-    };
-    res.json = (json) => responseJson = json;
+    const res = mockResponse();
 
     await handleRegister(req, res, db, bcrypt);
-    expect(statusCode).toEqual(400);
-    expect(responseJson).toEqual({err: 'password length should be between 4 and 30'});
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({err: 'password length should be between 4 and 30'});
   });
-
-
-
 
   test('successfully registers a user', async () => {
     const req = {
@@ -102,22 +74,13 @@ describe('handleRegister()', () => {
         password: 'john'
       }
     };
-    let statusCode;
-    let responseJson;
-    const res = {};
-    res.status = (code) => {
-      statusCode = code;
-      return res;
-    };
-    res.json = (json) => responseJson = json;
+    const res = mockResponse();
 
     await handleRegister(req, res, db, bcrypt);
-    expect(responseJson).toEqual({name: req.body.name, email: req.body.email});
+    expect(res.json).toHaveBeenCalledWith({name: req.body.name, email: req.body.email});
   });
 
-
   test('email already exists in the database', async () => {
-
     const req = {
       body: {
         name: 'John',
@@ -125,19 +88,11 @@ describe('handleRegister()', () => {
         password: 'john'
       }
     };
-    let statusCode;
-    let responseJson;
-    const res = {};
-    res.status = (code) => {
-      statusCode = code;
-      return res;
-    };
-    res.json = (json) => responseJson = json;
+    const res = mockResponse();
 
     await handleRegister(req, res, db, bcrypt);
-    expect(statusCode).toEqual(500);
-    expect(responseJson).toEqual({err: 'unable to register'});
-
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({err: 'unable to register'});
   });
 
 });
