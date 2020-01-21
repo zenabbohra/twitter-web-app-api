@@ -1,4 +1,4 @@
-## TwitterWebApp API
+## TwitterWebApp API [![Build Status](https://travis-ci.com/zenabbohra/twitter-web-app-api.svg?branch=master)](https://travis-ci.com/zenabbohra/twitter-web-app-api)
 
 Project APIs for a clone of [Twitter web application](https://github.com/zenabbohra/twitter-web-app)
 
