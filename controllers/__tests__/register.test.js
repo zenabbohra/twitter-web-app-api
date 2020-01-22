@@ -63,7 +63,7 @@ describe('handleRegister()', () => {
 
     await handleRegister(req, res, db, bcrypt);
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({err: 'password length should be between 4 and 30'});
+    expect(res.json).toHaveBeenCalledWith({err: 'password length should be between 3 and 30'});
   });
 
   test('successfully registers a user', async () => {

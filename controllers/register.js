@@ -8,7 +8,7 @@ const handleRegister = (req, res, db, bcrypt) => {
     return res.status(400).json({err: 'invalid email'});
   }
   if (typeof password !== 'string' || password.length > 30 || password.length < 3) {
-    return res.status(400).json({err: 'password length should be between 4 and 30'});
+    return res.status(400).json({err: 'password length should be between 3 and 30'});
   }
 
   return db.transaction(trx => {
