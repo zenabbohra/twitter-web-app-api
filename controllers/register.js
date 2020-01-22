@@ -16,16 +16,16 @@ const handleRegister = (req, res, db, bcrypt) => {
       email: email,
       hash: bcrypt.hashSync(password, 10)
     }).returning('email')
-      .then(loginEmail =>
-        trx('users').insert({
+      .then(loginEmail => {
+        return trx('users').insert({
           name: name,
           email: loginEmail[0],
           joined_date: new Date(),
           updated_at: new Date()
         })
-      )
+      })
       .then(trx.commit)
-      .catch((err) => trx.rollback(err))
+      .catch(trx.rollback)
   }).then(() => res.json({name: name, email: email}))
     .catch(err => {
       console.log('error while registering the user', err);

@@ -5,9 +5,12 @@ const handleSignIn = (req, res, db, bcrypt) => {
   }).select('*')
     .then(data => {
       if (data.length > 0 && bcrypt.compareSync(password, data[0].hash)) {
-        res.status(200).json({email, success: true});
+        return db('users').where({
+          email: email
+        }).select('*')
+          .then(user => res.json(user[0]));
       } else {
-        res.status(403).json({success: false, err: 'invalid password'});
+        res.status(403).json({success: false, err: 'invalid password or email'});
       }
     })
     .catch(err => {
