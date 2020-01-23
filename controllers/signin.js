@@ -8,7 +8,7 @@ const handleSignIn = (req, res, db, bcrypt) => {
         return db('users').where({
           email: email
         }).select('*')
-          .then(user => res.json(user[0]));
+          .then(user => res.status(200).json(user[0]));
       } else {
         res.status(403).json({success: false, err: 'invalid password or email'});
       }
