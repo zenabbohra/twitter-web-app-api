@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const handleSignIn = require('./controllers/signin');
@@ -6,6 +7,7 @@ const handleRegister = require('./controllers/register');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 // const db = require('knex')({
 //   client: 'pg',

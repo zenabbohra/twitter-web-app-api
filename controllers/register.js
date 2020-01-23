@@ -8,7 +8,7 @@ const handleRegister = (req, res, db, bcrypt) => {
     return res.status(400).json({err: 'invalid email'});
   }
   if (typeof password !== 'string' || password.length > 30 || password.length < 3) {
-    return res.status(400).json({err: 'password length should be between 4 and 30'});
+    return res.status(400).json({err: 'password length should be between 3 and 30'});
   }
 
   return db.transaction(trx => {
@@ -16,16 +16,16 @@ const handleRegister = (req, res, db, bcrypt) => {
       email: email,
       hash: bcrypt.hashSync(password, 10)
     }).returning('email')
-      .then(loginEmail =>
-        trx('users').insert({
+      .then(loginEmail => {
+        return trx('users').insert({
           name: name,
           email: loginEmail[0],
           joined_date: new Date(),
           updated_at: new Date()
         })
-      )
+      })
       .then(trx.commit)
-      .catch((err) => trx.rollback(err))
+      .catch(trx.rollback)
   }).then(() => res.json({name: name, email: email}))
     .catch(err => {
       console.log('error while registering the user', err);

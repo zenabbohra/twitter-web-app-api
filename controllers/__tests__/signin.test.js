@@ -14,7 +14,16 @@ describe('handleSignIn()', () => {
       table.timestamps();
     }).then(() => {
       return db.insert({email: 'correct-email@gmail.com', hash: bcrypt.hashSync('correct-password', 10)}).into('login');
-    });
+    })
+      .then(() =>
+        db.schema.createTable('users', function (table) {
+          table.increments();
+          table.string('name');
+          table.string('email');
+          table.dateTime('joined_date');
+          table.timestamps();
+          table.unique(['email']);
+        }));
   });
 
   test("sign in fails when a user does not exist", async () => {
