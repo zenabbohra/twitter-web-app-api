@@ -4,20 +4,15 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const handleSignIn = require('./controllers/signin');
 const handleRegister = require('./controllers/register');
+const handleRefreshToken = require('./controllers/refreshToken');
+const cookieParser = require('cookie-parser');
+// const refreshTokens = {};
+const auth = require('./middleware/auth');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-
-// const db = require('knex')({
-//   client: 'pg',
-//   connection: {
-//     host : '127.0.0.1',
-//     user : 'zenab',
-//     password : '',
-//     database : 'twitter-web-app-db'
-//   }
-// });
+app.use(cookieParser());
 
 console.log('NODE_ENV', process.env.NODE_ENV);
 const db = require('knex')({
@@ -28,16 +23,25 @@ const db = require('knex')({
   }
 });
 
-app.get('/', (req, res) => res.send('it is working'));
+const router = express.Router();
 
-app.post('/signin', (req, res) => {
+router.get('/health', (req, res) => res.send('it is working'));
+
+// router.use(auth()); //this uses auth.js to authenticate before calling the below APIs
+
+router.post('/signin', (req, res) => {
   handleSignIn(req, res, db, bcrypt)
 });
 
-app.post('/register', (req, res) => {
+router.post('/register', (req, res) => {
   handleRegister(req, res, db, bcrypt)
 });
 
+router.post('/refreshToken', (req,res) => {
+  handleRefreshToken(req, res)
+});
+
 const port = process.env.PORT || 3000;
+app.use('/api', router);
 app.listen(port, () => console.log(`app is listening on port ${port}`));
 
