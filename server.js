@@ -4,9 +4,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const handleSignIn = require('./controllers/signin');
 const handleRegister = require('./controllers/register');
-const handleRefreshToken = require('./controllers/refreshToken');
+const handleRefreshAccessToken = require('./controllers/refreshAccessToken');
 const cookieParser = require('cookie-parser');
-// const refreshTokens = {};
 const auth = require('./middleware/auth');
 
 const app = express();
@@ -38,7 +37,7 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/refreshToken', (req,res) => {
-  handleRefreshToken(req, res)
+  handleRefreshAccessToken(req, res)
 });
 
 const port = process.env.PORT || 3000;
