@@ -1,0 +1,7 @@
+{
+  "accessTokenSecret": "SECRETO_PARA_ENCRIPTACION",
+  "refreshTokenSecret": "REFRESH_TOKEN_SECRET",
+  "port": 3000,
+  "accessTokenLife": 900,
+  "refreshTokenLife": 86400
+}
